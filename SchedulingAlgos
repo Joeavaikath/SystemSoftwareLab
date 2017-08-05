@@ -1,0 +1,174 @@
+#include<stdio.h>
+void priorities(int P[10][5],int *N)
+{
+  int i,j;
+  for(i=0;i<*N;i++)
+        {
+                int swaps=0;
+                for(j=0;j<*N-i-1;j++)
+                {
+                        if(P[j][4]>P[j+1][4])
+                        {
+                                int t=P[j][0];
+                                int t2=P[j][1];
+                                int t3=P[j][4];
+                                P[j][0]=P[j+1][0];
+                                P[j][1]=P[j+1][1];
+                                P[j][4]=P[j+1][4];
+                                P[j+1][0]=t;
+                                P[j+1][1]=t2;
+                                P[j+1][4]=t3;
+                                swaps++;
+                        }
+                }
+                if (swaps==0)
+                        break;
+        }
+        return;
+}
+void sjf(int P[10][5],int *N)
+{
+  int i,j;
+  for(i=0;i<*N;i++)
+        {
+                int swaps=0;
+                for(j=0;j<*N-i-1;j++)
+                {
+                        if(P[j][1]>P[j+1][1])
+                        {
+                                int t=P[j][0];
+                                int t2=P[j][1];
+                                P[j][0]=P[j+1][0];
+                                P[j][1]=P[j+1][1];
+                                P[j+1][0]=t;
+                                P[j+1][1]=t2;
+                                swaps++;
+                        }
+                }
+                if (swaps==0)
+                        break;
+        }
+        return;
+}
+void endpart(int P[10][5],int *N)
+{
+    int i,j;
+  double aw=0,at=0;
+   P[0][2]=0;
+        P[0][3]=P[0][1];
+        for(i=1;i<*N;i++)
+        {
+                P[i][2]=P[i-1][2]+P[i-1][1];
+                P[i][3]=P[i][2]+P[i][1];
+        }
+        printf("\nDisplaying the processes: ");
+        printf("\nProcess\t\tBurst Time\tWaiting Time\tTurnaround Time\n");
+        for(i=0;i<*N;i++)
+        {
+        printf("\n%d\t\t%d\t\t%d\t\t%d\n",P[i][0],P[i][1],P[i][2],P[i][3]);
+        aw+=P[i][2];
+        at+=P[i][3];
+        }
+        printf("\nAverage waiting time is: %f",aw/(*N));
+        printf("\nAverage turnaround time is: %f\n",at/(*N));
+  
+}
+void roundr(int P[][5],int *N,int *q)
+{ 
+  double aw=0,at=0;
+  int rr[20],k=0;
+  int flag[20]={0};
+  int  remain,i=0,j=0;
+  remain=*N;
+  while(remain!=0)
+  {
+    if(flag[i]!=0)
+      {i=(i+1)%*N;
+      continue;
+      }
+    if(P[i][1]<*q)
+    { 
+      P[i][3]+=P[i][1];
+      int sp=P[i][1];
+      for(j=0;j<*N-1;j++)
+    {
+      if(flag[i]!=1)
+      i=(i+1)%*N;
+      P[i][2]+=sp;
+    }
+      P[i][1]=0;
+      remain--;
+      continue;
+    }
+    P[i][1]-=*q;
+    P[i][3]+=*q;
+    printf("\n%d\n",P[i][1]);
+    if(P[i][1]==0)
+    {
+      flag[i]=1;
+      remain--;
+    }
+    for(j=0;j<*N;j++)
+    {
+      i=(i+1)%*N;
+      if(flag[i]!=1)
+      P[i][2]+=*q;
+    }
+    rr[k]=P[i][0];
+    k++;
+    i=(i+1)%*N;
+    
+  }
+  printf("\n\n\n%d",k);
+  printf("Process order will be:\n");
+  for(i=0;i<k;i++)
+  {
+    printf("\n%d\n",rr[i]);
+  }
+  for(i=0;i<*N;i++)
+      P[i][3]=P[i][3]+P[i][2];
+  for(i=0;i<*N;i++)
+    {
+    printf("\n%d\t\t%d\t\t%d\t\t%d\n",P[i][0],P[i][1],P[i][2],P[i][3]);
+    aw+=P[i][2];
+    at+=P[i][3];
+    }
+    printf("\nAverage waiting time is: %f",aw/(*N));
+   printf("\nAverage turnaround time is: %f\n",at/(*N));  
+      
+      
+}
+void main()
+{
+        int c,i,j,swaps,N,q,A[10][5]={0};
+        printf("Enter the number of processes: ");
+        scanf("%d",&N);
+        printf("\nEnter the burst times and priorities: ");
+        for(i=0;i<N;i++)
+        {
+                printf("\nProcess %d:",i+1);
+                A[i][0]=i+1;
+                scanf("%d",&A[i][1]);
+                scanf("%d",&A[i][4]);
+        }
+        printf("Enter the choice: 1)FCFS 2)SJF 3)Priorities 4)Round-Robin");
+        scanf("%d",&c);
+        switch (c)
+        {
+          case 1:endpart(&A,&N);
+                  break;
+          case 2:printf("Running shortest-job-first: \n");
+                 sjf(&A,&N);
+                 endpart(&A,&N);
+                 break;
+          case 3:printf("Running priorities function: \n");
+                 priorities(&A,&N);
+                 endpart(&A,&N);
+                 break;
+          case 4:printf("Running Round-Robin:\nEnter the time quantum: ");
+                 scanf("%d",&q);
+                 roundr(&A,&N,&q);
+                 break;
+        }
+       
+}
