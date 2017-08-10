@@ -1,4 +1,6 @@
 #include<stdio.h>
+int wt[10],tat[10],bt[10];
+double avgw=0,avgt=0;
 void priorities(int P[10][5],int *N)
 {
   int i,j;
@@ -73,102 +75,98 @@ void endpart(int P[10][5],int *N)
         printf("\nAverage turnaround time is: %f\n",at/(*N));
   
 }
-void roundr(int P[][5],int *N,int *q)
-{ 
-  double aw=0,at=0;
-  int rr[20],k=0;
-  int flag[20]={0};
-  int  remain,i=0,j=0;
-  remain=*N;
-  while(remain!=0)
+void insert(int P[][5],int *N)
+{ int i;
+  printf("\nEnter the burst times and priorities: ");
+        for(i=0;i<*N;i++)
+        {
+                printf("\nProcess %d:",i+1);
+                P[i][0]=i+1;
+                scanf("%d",&P[i][1]);
+                scanf("%d",&P[i][4]);
+        }
+}
+void findwaitingtime()
+{
+  int processes[10],n,quantum;
+  printf("Enter the number of processes and the time quantum");
+  scanf("%d %d",&n,&quantum);
+  for(int i=0;i<n;i++)
   {
-    if(flag[i]!=0)
-      {i=(i+1)%*N;
-      continue;
+    printf("Enter the burst times");
+    processes[i]=i+1;
+    scanf("%d",&bt[i]);
+  }
+    int rem_bt[n];
+  for(int i=0;i<n;i++)
+    rem_bt[i]=bt[i];
+    
+  int t=0;
+  
+  while(1)
+  {
+    int d=1;
+    for(int i=0;i<n;i++)
+    {
+      if(rem_bt[i]>0)
+      {
+        d=0;
+        if(rem_bt[i]>quantum)
+        {t+=quantum;
+          rem_bt[i]-=quantum;
+        }
+        else
+        {
+          t=t+rem_bt[i];
+          wt[i]=t-bt[i];
+          rem_bt[i]=0;
+        }
       }
-    if(P[i][1]<*q)
-    { 
-      P[i][3]+=P[i][1];
-      int sp=P[i][1];
-      for(j=0;j<*N-1;j++)
-    {
-      if(flag[i]!=1)
-      i=(i+1)%*N;
-      P[i][2]+=sp;
     }
-      P[i][1]=0;
-      remain--;
-      continue;
-    }
-    P[i][1]-=*q;
-    P[i][3]+=*q;
-    printf("\n%d\n",P[i][1]);
-    if(P[i][1]==0)
-    {
-      flag[i]=1;
-      remain--;
-    }
-    for(j=0;j<*N;j++)
-    {
-      i=(i+1)%*N;
-      if(flag[i]!=1)
-      P[i][2]+=*q;
-    }
-    rr[k]=P[i][0];
-    k++;
-    i=(i+1)%*N;
+    if(d==1)
+    break;
+  }
+  for(int i=0;i<n;i++)
+  {
+    printf("\n%d\t%d\n",processes[i],wt[i]);
+    avgw+=wt[i];
     
   }
-  printf("\n\n\n%d",k);
-  printf("Process order will be:\n");
-  for(i=0;i<k;i++)
+  printf("\nAverage waiting time will be : %f",avgw/n);
+  for (int i = 0; i < n ; i++)
+        tat[i] = bt[i] + wt[i];
+  for(int i=0;i<n;i++) 
   {
-    printf("\n%d\n",rr[i]);
+        printf("\n%d\t%d\n",processes[i],tat[i]);
+        avgt+=tat[i];
   }
-  for(i=0;i<*N;i++)
-      P[i][3]=P[i][3]+P[i][2];
-  for(i=0;i<*N;i++)
-    {
-    printf("\n%d\t\t%d\t\t%d\t\t%d\n",P[i][0],P[i][1],P[i][2],P[i][3]);
-    aw+=P[i][2];
-    at+=P[i][3];
-    }
-    printf("\nAverage waiting time is: %f",aw/(*N));
-   printf("\nAverage turnaround time is: %f\n",at/(*N));  
-      
-      
+  printf("\nThe average turnaround time is: %f",avgt/n);;
 }
+
 void main()
 {
         int c,i,j,swaps,N,q,A[10][5]={0};
         printf("Enter the number of processes: ");
         scanf("%d",&N);
-        printf("\nEnter the burst times and priorities: ");
-        for(i=0;i<N;i++)
-        {
-                printf("\nProcess %d:",i+1);
-                A[i][0]=i+1;
-                scanf("%d",&A[i][1]);
-                scanf("%d",&A[i][4]);
-        }
         printf("Enter the choice: 1)FCFS 2)SJF 3)Priorities 4)Round-Robin");
         scanf("%d",&c);
         switch (c)
         {
-          case 1:endpart(&A,&N);
+          case 1:insert(&A,&N);
+                  endpart(&A,&N);
                   break;
           case 2:printf("Running shortest-job-first: \n");
+                 insert(&A,&N);
                  sjf(&A,&N);
                  endpart(&A,&N);
                  break;
           case 3:printf("Running priorities function: \n");
+                 insert(&A,&N);
                  priorities(&A,&N);
                  endpart(&A,&N);
                  break;
-          case 4:printf("Running Round-Robin:\nEnter the time quantum: ");
-                 scanf("%d",&q);
-                 roundr(&A,&N,&q);
-                 break;
+          case 4:findwaitingtime();
+                  break;
         }
        
 }
