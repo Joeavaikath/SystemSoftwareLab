@@ -83,6 +83,232 @@ void singled()
 
 }
 
+void twod()
+{
+  
+  struct
+{
+  char dname[10],fname[10][10];
+  int fcnt;
+}dir[10];
+
+int i,ch,dcnt,k;
+char f[30], d[30];
+dcnt=0;
+while(1)
+{
+  printf("\n\n 1. Create Directory\t 2. Create File\t 3. Delete File");
+  printf("\n 4. Search File \t \t 5. Display \t 6. Exit \t Enter your choice -- ");
+  scanf("%d",&ch);
+    switch(ch)
+  {
+  case 1: printf("\n Enter name of directory -- ");
+  scanf("%s", dir[dcnt].dname);
+  dir[dcnt].fcnt=0;
+  dcnt++;
+  printf("Directory created");
+  break;
+  case 2: printf("\n Enter name of the directory -- ");
+  scanf("%s",d);
+  for(i=0;i<dcnt;i++)
+  if(strcmp(d,dir[i].dname)==0)
+  {
+    printf("Enter name of the file -- ");
+    scanf("%s",dir[i].fname[dir[i].fcnt]);
+    dir[i].fcnt++;
+    printf("File created");
+    break;
+  }
+  if(i==dcnt)
+  printf("Directory %s not found",d);
+  break;
+  case 3: printf("\nEnter name of the directory -- ");
+  scanf("%s",d);
+  for(i=0;i<dcnt;i++)
+  {
+    if(strcmp(d,dir[i].dname)==0)
+    {
+      printf("Enter name of the file -- ");
+      scanf("%s",f);
+      for(k=0;k<dir[i].fcnt;k++)
+        {
+          if(strcmp(f, dir[i].fname[k])==0)
+            {
+              printf("File %s is deleted ",f);
+              dir[i].fcnt--;
+              strcpy(dir[i].fname[k],dir[i].fname[dir[i].fcnt]);
+              goto jmp;
+            }
+        }
+      printf("File %s not found",f);
+      goto jmp;
+    }
+  }
+printf("Directory %s not found",d);
+jmp : break;
+case 4: printf("\nEnter name of the directory -- ");
+scanf("%s",d);
+for(i=0;i<dcnt;i++)
+{
+
+if(strcmp(d,dir[i].dname)==0)
+{
+printf("Enter the name of the file -- ");
+scanf("%s",f);
+for(k=0;k<dir[i].fcnt;k++)
+{
+if(strcmp(f, dir[i].fname[k])==0)
+{
+printf("File %s is found ",f);
+goto jmp1;
+}
+}
+printf("File %s not found",f);
+goto jmp1;
+}
+}
+printf("Directory %s not found",d);
+jmp1: break;
+case 5: if(dcnt==0)
+printf("\nNo Directory's ");
+else
+{
+printf("\nDirectory\tFiles");
+for(i=0;i<dcnt;i++)
+{
+printf("\n%s\t\t",dir[i].dname);
+for(k=0;k<dir[i].fcnt;k++)
+printf("\t%s",dir[i].fname[k]);
+}
+}
+break;
+default:exit(0);
+}
+}
+}
+
+void hierarchical()
+{
+  struct
+  {
+    char name[30];
+    char type;
+    int flag;
+  }sys[30];
+  
+  int i,c,flag2=0;
+  char ch,chname[10];
+  for(i=0;i<30;i++)
+    sys[i].flag=0;
+    
+  //INITIAL CREATION
+  sys[1].flag=sys[2].flag=sys[3].flag=1;
+  sys[1].type=sys[2].type=sys[3].type='d';
+  printf("Enter the name of the two user directories: ");
+  scanf("%s %s",sys[2].name,sys[3].name);
+  while(1)
+  {
+  printf("\nMENU\n1)Create directory/file\n2)Delete file\n3)Search directory/file\n4)Display directory\n");
+  scanf("%d",&c);
+  switch (c)
+  {
+    case 1://CREATION
+            printf("Directory or File?(d/f)");
+            scanf("%c",&ch);
+            scanf("%c",&ch);
+            printf("Enter the name of the directory to enter in:");
+            scanf("%s",chname);
+            for(i=1;i<30;i++)
+            { 
+              if(strcmp(chname,sys[i].name)==0)
+              {
+                if(sys[2*i].flag==1 && sys[(2*i)+1].flag==1)
+                  {
+                    printf("Insertion not possible in specified directory. Aborting.");
+                    break;
+                  }
+                else if(sys[2*i].flag==0)
+                {
+                  flag2=1;
+                  sys[2*i].type=ch;
+                  sys[2*i].flag=1;
+                  printf("\Enter the name:");
+                  scanf("%s",sys[2*i].name);
+        
+                }
+                else
+                {
+                flag2=1;
+                sys[(2*i)+1].type=ch;
+                sys[(2*i)+1].flag=1;
+                printf("\Enter the name:");
+                scanf("%s",sys[(2*i)+1].name);
+                }
+              }
+            }
+  if(flag2==0)
+  {
+    printf("Insertion failed. No such directory");
+  }
+  flag2=0;
+  break;
+  
+  case 2:  //DELETE File
+          printf("Enter the name of the file to be deleted:");
+          scanf("%s",chname);
+          for(i=0;i<30;i++)
+          {
+          if(strcmp(chname,sys[i].name)==0)
+            {
+            flag2=1;
+            sys[i].flag=0;
+            printf("Deletetion successful");
+            }
+          }
+          if(flag2==0)
+          {
+            printf("The specified file does not exist");
+          }
+          flag2=0;
+          break;
+  
+  case 3:   //Search
+  
+  printf("Enter the name of the directory/file to be searched for");
+  scanf("%s",chname);
+  for(i=1;i<30;i++)
+  {
+    if(strcmp(chname,sys[i].name)==0)
+    { 
+      flag2=1;
+      printf("Entity exists!");
+    }
+    
+  }
+  if(flag2==0)
+  {
+    printf("entity does not exist");
+  }
+  flag2=0;
+  break;
+  
+  case 4: //display all
+  printf("Displaying the file system:");
+  for(i=1;i<30;i++)
+  {
+    if(i==2||i==4||i==8||i==16)
+      printf("\n\n");
+    if(sys[i].flag==1)
+    {
+      printf("%s of type %c",sys[i].name,sys[i].type);
+    }
+  }
+  break;
+  
+  case 5:exit(0);
+  }
+  }
+}
 
 void main()
 {
@@ -96,6 +322,11 @@ switch (c)
         case 1:printf("\nImplementing single level directory\n");
                singled();
                 break;
-//      case 2:printf("
+        case 2:printf("\nImplementing two level directory\n");
+                twod();
+                break;
+        case 3:printf("\nImplementing hierarchical directory\n");
+                hierarchical();
+                break;
 }
 }
