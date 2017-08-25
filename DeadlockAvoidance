@@ -1,0 +1,105 @@
+#include<stdio.h>
+int n,m,i,j,available[10],max[10][10],allocation[10][10],need[10][10];
+int request[10];
+char finish[10];
+
+void safety()
+{
+        int work[10];
+        for(i=0;i<m;i++)
+        {
+        work[i]=available[i];
+        }
+        int i,j,flag=1;
+         for(i=0;i<n;i++)
+          {
+          finish[i]='f';
+          }
+        while(1)
+        {
+        for(i=0;i<n;i++)
+        {
+                if(finish[i]=='f')
+                {
+                        for(j=0;j<m;j++)
+                        {       flag=0;
+                                if(need[i][j]>work[j])
+                                {
+                                        flag=1;
+                                }
+
+                        }
+                }
+         if(flag==0)
+                 break;
+
+        }
+                for(j=0;j<m;j++)
+                {
+                        work[j]=work[j]+allocation[i][j];
+                        finish[i]='t';
+                }
+
+        flag=0;
+        if(i==n)
+        {
+                for(i=0;i<n;i++)
+                {
+                        if(finish[i]!='t')
+                        {
+                                flag=1;
+                        }
+                }
+                if(flag==0)
+                {
+                        printf("\nState is safe");
+                }
+        }
+}
+
+
+
+void main()
+{
+        printf("\nEnter the number of processes and the number of resources: ");
+        scanf("%d %d",&n,&m);
+        for(i=0;i<n;i++)
+        {
+                printf("\nEnter the allocated resource data for process %d",n);
+                for(j=0;j<m;j++)
+                {
+                        printf("\nResource %d: ",j);
+                        scanf("%d",&allocation[i][j]);
+                }
+        }
+         for(i=0;i<n;i++)
+          {
+                  printf("\nEnter the max data for process %d",n);
+                  for(j=0;j<m;j++)
+                        {
+                         printf("\nResource %d: ",j);
+                        scanf("%d",&max[i][j]);
+                        }
+          }
+        for(i=0;i<n;i++)
+        {
+                for(j=0;j<m;j++)
+                {
+                        need[i][j]=max[i][j]-allocation[i][j];
+                }
+        }
+        printf("\nEnter the available resource values");
+        for(i=0;i<m;i++)
+        {
+                printf("\nResource %d",i);
+                scanf("%d",&available[i]);
+        }
+        safety();
+}
+
+
+
+
+
+
+}
