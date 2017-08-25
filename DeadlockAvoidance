@@ -56,6 +56,7 @@ void safety()
                 }
         }
 }
+}
 
 
 
@@ -65,19 +66,19 @@ void main()
         scanf("%d %d",&n,&m);
         for(i=0;i<n;i++)
         {
-                printf("\nEnter the allocated resource data for process %d",n);
+                printf("\nEnter the allocated resource data for process %d",i);
                 for(j=0;j<m;j++)
                 {
-                        printf("\nResource %d: ",j);
+                        printf("\nResource %d: ",j+1);
                         scanf("%d",&allocation[i][j]);
                 }
         }
          for(i=0;i<n;i++)
           {
-                  printf("\nEnter the max data for process %d",n);
+                  printf("\nEnter the max data for process %d",i+1);
                   for(j=0;j<m;j++)
                         {
-                         printf("\nResource %d: ",j);
+                         printf("\nResource %d: ",j+1);
                         scanf("%d",&max[i][j]);
                         }
           }
@@ -95,11 +96,4 @@ void main()
                 scanf("%d",&available[i]);
         }
         safety();
-}
-
-
-
-
-
-
 }
