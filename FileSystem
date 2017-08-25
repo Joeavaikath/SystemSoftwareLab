@@ -204,6 +204,7 @@ void hierarchical()
   //INITIAL CREATION
   sys[1].flag=sys[2].flag=sys[3].flag=1;
   sys[1].type=sys[2].type=sys[3].type='d';
+  strcpy(sys[1].name,"root");
   printf("Enter the name of the two user directories: ");
   scanf("%s %s",sys[2].name,sys[3].name);
   while(1)
@@ -293,14 +294,14 @@ void hierarchical()
   break;
   
   case 4: //display all
-  printf("Displaying the file system:");
+  printf("Displaying the file system:\n");
   for(i=1;i<30;i++)
   {
     if(i==2||i==4||i==8||i==16)
       printf("\n\n");
     if(sys[i].flag==1)
     {
-      printf("%s of type %c",sys[i].name,sys[i].type);
+      printf("%d)%s(%c)\t",i,sys[i].name,sys[i].type);
     }
   }
   break;
