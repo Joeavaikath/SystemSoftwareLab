@@ -1,5 +1,5 @@
 #include<stdio.h>
-int a[10],fr[10],n,i,j,temp,fsize,c,flag,h=0,fault=0;
+int a[10],fr[10],n,i,j,k,temp,fsize,c,flag,h=0,fault=0;
 initialize()
 {
         fault=0;
@@ -19,6 +19,40 @@ initialize()
         }
 
 
+}
+initialize1()
+{
+	fault=0;
+        printf("\nEnter the length of the page reference sequence: ");
+        scanf("%d",&n);
+
+        printf("\nEnter the page refernce string: \n");
+        for(i=0;i<n;i++)
+                scanf("%d",&a[i]);
+        printf("\nEnter the number of frames: ");
+        scanf("%d",&fsize);
+	
+	for(i=0;i<fsize;i++)
+	{	fr[i]=a[i];
+		printf("<%d>",i);
+		if(i>0)
+		{
+			for(j=0;j<i;j++)
+			{	
+				printf("<%d>",j);
+				if(fr[i]==fr[j])
+				{
+					for(k=j;k<i-1;k++)
+					{
+						fr[k]=fr[k+1];	
+					}
+					i--;
+					break;
+				}	
+			}
+		
+		}
+	}
 }
 fifo()
 {
@@ -53,7 +87,7 @@ fifo()
 }
 lru()
 {
-        initialize();
+        initialize1();
         for(i=fsize;i<n;i++)
         {
                 for(j=0;j<fsize;j++)
