@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<string.h>
-
+#include<stdlib.h>
 void main()
 {
 
@@ -67,9 +67,8 @@ void main()
                                 op1=atoi(op);
                                 loc_ctr+=1;
                         }
-                }
-
                         fscanf(in_file,"%s %s",la,m1);
+		}
                         if(strcmp(m1,"END")==0)
                                 printf("Program length = %d",loc_ctr-start_ad);
                         fclose(in_file);
